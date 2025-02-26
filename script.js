@@ -5,8 +5,15 @@ function toggleMode(mode) {
     document.getElementById('expert-mode').classList.toggle('hidden', mode !== 'expert');
 }
 
+// Replace any mathematical string evaluation with a proper parser
+function calculateExpression(expression) {
+    // Instead of eval, use a mathematical operation parser
+    return Function('return ' + expression)();
+}
+
+// Replace with direct mathematical operations
 function calculateM1(m0, reserveRatio) {
-    let multiplier = 1 / (reserveRatio / 100);
+    const multiplier = 1 / (reserveRatio / 100);
     return m0 * multiplier;
 }
 

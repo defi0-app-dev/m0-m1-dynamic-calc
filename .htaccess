@@ -1,0 +1,2 @@
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/; style-src 'self' https://cdn.jsdelivr.net/ 'unsafe-inline'; img-src 'self' data:;"
+Header set X-Content-Type-Options "nosniff"
