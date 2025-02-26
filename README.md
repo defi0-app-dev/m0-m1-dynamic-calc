@@ -53,14 +53,19 @@ git clone https://github.com/d-fi0racle/m0-m1-dynamic-calc.git
 cd m0-m1-dynamic-calc
 ```
 
-2. Install dependencies:
+2. Install PNPM if you haven't already:
 ```bash
-npm install
+npm install -g pnpm
 ```
 
-3. Start development server:
+3. Install dependencies:
 ```bash
-npm start
+pnpm install
+```
+
+4. Start development server:
+```bash
+pnpm dev
 ```
 
 ## 📖 Usage
@@ -84,7 +89,7 @@ npm start
 The project is configured for [Vercel](https://vercel.com) deployment. The app will be available at `https://m0-m1-dynamic-calc.your-domain.com` after deployment:
 
 ```bash
-npm run deploy
+pnpm deploy
 ```
 
 ## 📚 Educational Resources
@@ -121,4 +126,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 [Live Demo](https://m0-m1-dynamic-calc.your-domain.com) | [Report Bug](https://github.com/your-username/m0-m1-dynamic-calc/issues) | [Request Feature](https://github.com/your-username/m0-m1-dynamic-calc/issues)
-````
