@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M0-to-M1 Money Supply Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="calculator">
+        <h2>M0-to-M1 Money Supply Calculator</h2>
+        <div class="mode-toggle">
+            <button onclick="toggleMode('simple')">Simple Mode</button>
+            <button onclick="toggleMode('expert')">Expert Mode</button>
+        </div>
+        
+        <div id="simple-mode">
+            <div class="input-group">
+                <label>Monetary Base (M0): <span class="info" data-tooltip="The total amount of cash and reserves in the system.">[?]</span></label>
+                <input type="number" id="m0" value="1000" oninput="updateSimpleMode()" title="Monetary Base Simple Mode" placeholder="Enter monetary base amount">
+            </div>
+            <p>Estimated M1: <strong id="m1-output">10000</strong></p>
+        </div>
+        
+        <div id="expert-mode" class="hidden">
+            <div class="input-group">
+                <label>Monetary Base (M0): <span class="info" data-tooltip="The total amount of cash and reserves in the system.">[?]</span></label>
+                <input type="number" id="m0-expert" value="1000" title="Monetary Base Expert Mode" placeholder="Enter monetary base amount" oninput="updateExpertMode()">
+            </div>
+            <div class="input-group">
+                <label>Reserve Ratio (%): <span class="info" data-tooltip="The percentage of deposits banks must keep in reserves.">[?]</span></label>
+                <div class="range-group">
+                    <input type="range" id="reserve-ratio" min="1" max="50" value="10" oninput="updateExpertMode()" title="Reserve Ratio Percentage" placeholder="Select reserve ratio percentage">
+                    <span id="reserve-value">10%</span>
+                </div>
+            </div>
+            <p>Money Multiplier: <strong id="multiplier-output">10</strong></p>
+            <p>Estimated M1: <strong id="m1-expert-output">10000</strong></p>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="moneyChart"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
