@@ -1,4 +1,4 @@
-let isDarkMode = false;
+let isDarkMode = localStorage.getItem('theme') === 'dark';
 
 function toggleMode() {
     isDarkMode = !isDarkMode;
@@ -15,4 +15,12 @@ function toggleMode() {
     toggleButtons.forEach(button => {
         button.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
     });
+
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (isDarkMode) {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+    }
+});

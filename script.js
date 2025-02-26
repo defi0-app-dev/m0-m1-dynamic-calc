@@ -1,17 +1,29 @@
+import { evaluate } from 'mathjs';
+
 let chart;
+const cachedElements = {};
+
+function cacheElements() {
+    ['m0-input', 'reserve-ratio', 'multiplier-value', 'm1-value', 'ratio-value'].forEach(id => {
+        cachedElements[id] = document.getElementById(id);
+    });
+}
 
 function toggleMode(mode) {
+    localStorage.setItem('calculatorMode', mode);
     document.getElementById('simple-mode').classList.toggle('hidden', mode !== 'simple');
     document.getElementById('expert-mode').classList.toggle('hidden', mode !== 'expert');
 }
 
-// Replace any mathematical string evaluation with a proper parser
 function calculateExpression(expression) {
-    // Instead of eval, use a mathematical operation parser
-    return Function('return ' + expression)();
+    try {
+        return evaluate(expression);
+    } catch (error) {
+        console.error('Invalid calculation:', error);
+        return NaN;
+    }
 }
 
-// Replace with direct mathematical operations
 function calculateM1(m0, reserveRatio) {
     const multiplier = 1 / (reserveRatio / 100);
     return m0 * multiplier;
@@ -39,34 +51,42 @@ function updateExpertMode() {
 }
 
 function updateChart(m0 = 1000, m1 = 10000) {
-    let ctx = document.getElementById('moneyChart').getContext('2d');
+    const ctx = document.getElementById('moneyChart').getContext('2d');
+    
     if (chart) {
         chart.data.datasets[0].data = [m0, m1];
         chart.update();
-    } else {
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['M0 (Base Money)', 'M1 (Total Money Supply)'],
-                datasets: [{
-                    label: 'Money Supply Breakdown',
-                    data: [m0, m1],
-                    backgroundColor: ['blue', 'green']
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        return;
+    }
+    
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['M0 (Base Money)', 'M1 (Total Money Supply)'],
+            datasets: [{
+                label: 'Money Supply Breakdown',
+                data: [m0, m1],
+                backgroundColor: ['blue', 'green']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
-    }
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    cacheElements();
+    
+    // Load saved mode
+    const savedMode = localStorage.getItem('calculatorMode') || 'simple';
+    toggleMode(savedMode);
+    
     const themeToggle = document.getElementById('theme-toggle');
     const modeToggle = document.querySelectorAll('input[name="mode"]');
     const expertControls = document.getElementById('expert-controls');
@@ -130,3 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // ...existing chart update code...
     }
 });
+
+function resetChart() {
+    if (chart) {
+        chart.destroy();
+        chart = null;
+    }
+}
