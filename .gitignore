@@ -28,4 +28,4 @@ Thumbs.db
 # PNPM specific
 .pnpm-debug.log*
 .pnpm-store/
-pnpm-lock.yaml
+
