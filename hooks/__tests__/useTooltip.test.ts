@@ -1,36 +1,30 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useTooltip } from '../useTooltip';
+import { TooltipContent } from '../../types/calculator';
 
 describe('useTooltip', () => {
-  test('initial state is correct', () => {
+  it('should show and hide tooltip', () => {
     const { result } = renderHook(() => useTooltip());
-    
+
+    const mockElement = document.createElement('div');
+    const mockContent: TooltipContent = {
+      title: 'Test Title',
+      description: 'Test Description',
+      example: 'Test Example'
+    };
+
+    // Initial state check
     expect(result.current.tooltipVisible).toBe(false);
-    expect(result.current.tooltipContent).toBeNull();
-    expect(result.current.position).toEqual({ x: 0, y: 0 });
-  });
+    expect(result.current.tooltipContent).toBe(null);
 
-  test('showTooltip updates state correctly', () => {
-    const { result } = renderHook(() => useTooltip());
-    const mockContent = { title: 'Test', description: 'Test desc' };
-    const mockEvent = { clientX: 100, clientY: 200 } as React.MouseEvent;
-
-    act(() => {
-      result.current.showTooltip(mockContent, mockEvent);
-    });
-
+    // Show tooltip
+    result.current.showTooltip(mockElement, mockContent);
     expect(result.current.tooltipVisible).toBe(true);
     expect(result.current.tooltipContent).toEqual(mockContent);
-    expect(result.current.position).toEqual({ x: 100, y: 200 });
-  });
 
-  test('hideTooltip resets visibility', () => {
-    const { result } = renderHook(() => useTooltip());
-    
-    act(() => {
-      result.current.hideTooltip();
-    });
-
+    // Hide tooltip
+    result.current.hideTooltip();
     expect(result.current.tooltipVisible).toBe(false);
+    expect(result.current.tooltipContent).toBe(null);
   });
 });

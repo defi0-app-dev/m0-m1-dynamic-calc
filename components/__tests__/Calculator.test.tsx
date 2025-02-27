@@ -12,13 +12,13 @@ describe('Calculator Component', () => {
   });
 
   test('shows tooltip on input hover', () => {
-    const input = screen.getByPlaceholderText('Enter M0');
+    const input = screen.getByLabelText('M0 input');
     
     fireEvent.mouseEnter(input);
-    expect(screen.getByText('Monetary Base (M0)')).toBeInTheDocument();
+    expect(screen.getByText('Initial Mass (M₀)')).toBeInTheDocument();
     
     fireEvent.mouseLeave(input);
-    expect(screen.queryByText('Monetary Base (M0)')).not.toBeInTheDocument();
+    expect(screen.queryByText('Initial Mass (M₀)')).not.toBeInTheDocument();
   });
 
   test('handles input changes', () => {
