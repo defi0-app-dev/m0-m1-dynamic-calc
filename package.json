@@ -1,5 +1,5 @@
 {
-  "name": "dynamic-calc",
+  "name": "m0-m1-dynamic-calc",
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@10.5.2",
@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "vercel deploy --prod",
-    "test": "jest",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .ts,.tsx"
