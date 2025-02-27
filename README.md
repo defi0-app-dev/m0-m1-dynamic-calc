@@ -42,3 +42,18 @@ Tests are written using Jest and React Testing Library.
 ## Deployment
 
 The application is automatically deployed to Vercel through GitHub Actions.
+
+## GitHub Actions Configuration
+
+### Required Secrets
+
+The following secrets need to be configured in your GitHub repository settings:
+
+- `VERCEL_TOKEN`: Your Vercel authentication token
+- `ORG_ID`: Your Vercel organization ID
+- `PROJECT_ID`: Your Vercel project ID
+
+To obtain these values:
+1. Get your Vercel token from your account settings
+2. Find your organization ID from the Vercel dashboard
+3. Get your project ID from the project settings in Vercel
