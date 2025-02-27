@@ -25,7 +25,7 @@ function toggleMode(mode) {
 
 function calculateExpression(expression) {
     try {
-        return evaluate(expression);
+        return evaluate(expression, {});  // Add empty scope object as second parameter
     } catch (error) {
         console.error('Invalid calculation:', error);
         return NaN;

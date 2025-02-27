@@ -37,13 +37,40 @@ function updateThemeIcon(theme) {
 
 function updateChartTheme(theme) {
     if (window.chart) {
-        const textColor = theme === 'dark' ? '#fff' : '#666';
+        const isDark = theme === 'dark';
+        const textColor = isDark ? '#fff' : '#666';
+        const gridColor = isDark ? '#444' : '#ddd';
+        
         chart.options.plugins.legend.labels.color = textColor;
+        chart.options.scales.x.grid.color = gridColor;
+        chart.options.scales.y.grid.color = gridColor;
         chart.options.scales.x.ticks.color = textColor;
         chart.options.scales.y.ticks.color = textColor;
+        
+        // Update dataset colors
+        chart.data.datasets[0].backgroundColor = [
+            isDark ? 'rgba(64, 156, 255, 0.6)' : 'rgba(13, 110, 253, 0.6)',
+            isDark ? 'rgba(75, 192, 112, 0.6)' : 'rgba(40, 167, 69, 0.6)'
+        ];
+        
         chart.update();
     }
 }
+
+// Add transition observer
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-bs-theme') {
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            updateChartTheme(theme);
+        }
+    });
+});
+
+observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-bs-theme']
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();

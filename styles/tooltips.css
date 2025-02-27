@@ -1,0 +1,49 @@
+.tooltip-custom-wrapper {
+  position: fixed;
+  max-width: 300px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tooltip-custom {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  z-index: 1000;
+  pointer-events: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tooltip-custom h6 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.tooltip-custom p {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.tooltip-custom small {
+  display: block;
+  font-size: 0.75rem;
+  color: #ccc;
+  font-style: italic;
+}
+
+.tooltip-custom-offset {
+  transform: translate(10px, 10px);
+}
