@@ -2,7 +2,7 @@
   "name": "m0-m1-dynamic-calc",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.2.0",
+  "packageManager": "pnpm@9.x",
   "description": "Interactive calculator for understanding money supply dynamics",
   "main": "script.js",
   "scripts": {
@@ -63,7 +63,7 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "pnpm": ">=10.0.0"
+    "pnpm": ">=9.0.0"
   },
   "readme": "## Installation\n\n1. Install pnpm globally: `npm install -g pnpm@10.5.1`\n2. Install dependencies: `pnpm install`\n3. Start dev server: `pnpm dev`\n\n## Note\n\nThe version constraint for the abab dependency has been pinned to 2.0.6.",
   "pnpm": {
