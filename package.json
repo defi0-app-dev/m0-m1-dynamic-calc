@@ -2,7 +2,7 @@
   "name": "m0-m1-dynamic-calc",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.2.0",
   "description": "Interactive calculator for understanding money supply dynamics",
   "main": "script.js",
   "scripts": {
