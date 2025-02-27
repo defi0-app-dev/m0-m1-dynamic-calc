@@ -1,43 +1,58 @@
-let isDarkMode = localStorage.getItem('theme') === 'dark' || 
-    (localStorage.getItem('theme') === null && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches);
+const THEME_KEY = 'calculator-theme';
 
-function toggleMode() {
-    isDarkMode = !isDarkMode;
-    const body = document.body;
-    const calculator = document.querySelector('.calculator');
-    const display = document.querySelector('.display');
-    
-    body.classList.toggle('dark-mode');
-    calculator.classList.toggle('dark-mode');
-    display.classList.toggle('dark-mode');
-    
-    // Update button text
-    const toggleButtons = document.querySelectorAll('.mode-toggle');
-    toggleButtons.forEach(button => {
-        button.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
-    });
+function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+    applyTheme(savedTheme);
+}
 
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+function applyTheme(theme) {
+    const root = document.documentElement;
+    const transitioning = document.createElement('style');
+    transitioning.textContent = `
+        * { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important; }
+    `;
+    document.head.appendChild(transitioning);
     
-    // Add transition class
-    document.documentElement.classList.add('theme-transition');
+    root.setAttribute('data-bs-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    updateThemeIcon(theme);
+    
     setTimeout(() => {
-        document.documentElement.classList.remove('theme-transition');
+        transitioning.remove();
     }, 300);
 }
 
-// Listen for system theme changes
-window.matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', e => {
-        if (localStorage.getItem('theme') === null) {
-            isDarkMode = e.matches;
-            toggleMode();
-        }
-    });
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const iconImg = document.querySelector('#theme-toggle img');
+    if (iconImg) {
+        iconImg.src = `assets/${theme === 'dark' ? 'light' : 'dark'}-theme.svg`;
+    }
+}
+
+function updateChartTheme(theme) {
+    if (window.chart) {
+        const textColor = theme === 'dark' ? '#fff' : '#666';
+        chart.options.plugins.legend.labels.color = textColor;
+        chart.options.scales.x.ticks.color = textColor;
+        chart.options.scales.y.ticks.color = textColor;
+        chart.update();
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (isDarkMode) {
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
+    initTheme();
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+            updateChartTheme(newTheme);
+        });
     }
 });

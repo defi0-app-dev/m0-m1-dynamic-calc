@@ -1,4 +1,12 @@
 import { evaluate } from 'mathjs';
+import { 
+    calculateM1, 
+    calculateMoneyMultiplier, 
+    calculateVelocityImpact,
+    validateInputs,
+    DEFAULT_RESERVE_RATIO,
+    DEFAULT_VELOCITY
+} from './js/calculations.js';
 
 let chart;
 const cachedElements = {};
@@ -24,11 +32,6 @@ function calculateExpression(expression) {
     }
 }
 
-function calculateM1(m0, reserveRatio) {
-    const multiplier = 1 / (reserveRatio / 100);
-    return m0 * multiplier;
-}
-
 function updateSimpleMode() {
     let m0 = parseFloat(document.getElementById('m0').value) || 0;
     let m1 = calculateM1(m0, 10);
@@ -37,17 +40,44 @@ function updateSimpleMode() {
 }
 
 function updateExpertMode() {
-    let m0 = parseFloat(document.getElementById('m0-expert').value) || 0;
-    let reserveRatio = parseFloat(document.getElementById('reserve-ratio').value);
-    document.getElementById('reserve-value').textContent = reserveRatio + '%';
+    const m0 = parseFloat(cachedElements['m0-input'].value) || 0;
+    const reserveRatio = parseFloat(cachedElements['reserve-ratio'].value);
+    const velocity = parseFloat(cachedElements['velocity-input'].value) || DEFAULT_VELOCITY;
+
+    const errors = validateInputs(m0, reserveRatio, velocity);
+    if (errors.length > 0) {
+        showErrors(errors);
+        return;
+    }
+
+    const m1 = calculateM1(m0, reserveRatio);
+    const velocityImpact = calculateVelocityImpact(m1, velocity);
+    const multiplier = calculateMoneyMultiplier(reserveRatio);
+
+    updateDisplay(m1, multiplier, velocityImpact);
+    updateChart(m0, m1, velocityImpact);
+    showEducationalTips(reserveRatio, velocity);
+}
+
+function showErrors(errors) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger';
+    alertDiv.textContent = errors.join(', ');
+    document.querySelector('.results').prepend(alertDiv);
+    setTimeout(() => alertDiv.remove(), 3000);
+}
+
+function showEducationalTips(reserveRatio, velocity) {
+    const tips = [];
+    if (reserveRatio < 5) {
+        tips.push('Low reserve requirements can risk bank stability but greatly increase money supply.');
+    }
+    if (velocity > 3) {
+        tips.push('High velocity often coincides with inflationary pressure.');
+    }
     
-    let m1 = calculateM1(m0, reserveRatio);
-    document.getElementById('m1-expert-output').textContent = m1.toFixed(2);
-    
-    let multiplier = (1 / (reserveRatio / 100)).toFixed(2);
-    document.getElementById('multiplier-output').textContent = multiplier;
-    
-    updateChart(m0, m1);
+    const tipsElement = document.getElementById('educational-tips');
+    tipsElement.innerHTML = tips.map(tip => `<div class="alert alert-info">${tip}</div>`).join('');
 }
 
 function updateChart(m0 = 1000, m1 = 10000) {
@@ -141,14 +171,73 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initChart() {
-        // Chart initialization code here
-        // ...existing chart code...
+        try {
+            const ctx = document.getElementById('moneyChart');
+            if (!ctx) {
+                throw new Error('Chart canvas element not found');
+            }
+            
+            return new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['M0 (Base Money)', 'M1 (Total Money Supply)'],
+                    datasets: [{
+                        label: 'Money Supply Breakdown',
+                        data: [0, 0],
+                        backgroundColor: ['rgba(13, 110, 253, 0.6)', 'rgba(40, 167, 69, 0.6)'],
+                        borderColor: ['rgb(13, 110, 253)', 'rgb(40, 167, 69)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 750,
+                        easing: 'easeInOutQuart'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => `$${value.toLocaleString()}`
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: context => `$${context.parsed.y.toLocaleString()}`
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Chart initialization failed:', error);
+            return null;
+        }
     }
 
     function updateChart(chart, m0 = 0, m1 = 0) {
         // Chart update code here
         // ...existing chart update code...
     }
+
+    function sanitizeInput(value) {
+        return parseFloat(value.replace(/[^\d.-]/g, '')) || 0;
+    }
+
+    // Update input handling
+    document.getElementById('m0-input')?.addEventListener('input', (e) => {
+        e.target.value = sanitizeInput(e.target.value);
+    });
+
+    // Add error boundary
+    window.addEventListener('error', (event) => {
+        console.error('Global error:', event.error);
+        showErrors(['An unexpected error occurred. Please try again.']);
+    });
 });
 
 function resetChart() {
