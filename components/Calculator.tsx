@@ -85,11 +85,6 @@ const Calculator: React.FC = () => {
     }
   };
 
-  const tooltipStyles: React.CSSProperties = {
-    left: position.x,
-    top: position.y
-  };
-
   return (
     <div className={styles.calculator} role="application" aria-label="Calculator">
       <div className={styles.display}>
@@ -117,7 +112,7 @@ const Calculator: React.FC = () => {
           <div 
             className={`${styles.tooltipWrapper} tooltip-custom-wrapper tooltip-custom-offset`}
             role="tooltip"
-            style={tooltipStyles}
+            style={{ left: position.x, top: position.y }}  // Keep only positioning styles inline
           >
             <div className="tooltip-custom">
               <h6>{tooltipContent.title}</h6>
