@@ -18,7 +18,17 @@ export function middleware(request: NextRequest) {
     upgrade-insecure-requests;
   `.replace(/\s{2,}/g, ' ').trim()
 
+  // Security headers
   response.headers.set('Content-Security-Policy', cspHeader)
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('Content-Type', 'text/html; charset=utf-8')
+  
+  // Cache control for static assets
+  if (request.url.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg)$/)) {
+    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  } else {
+    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
+  }
   
   return response
 }
