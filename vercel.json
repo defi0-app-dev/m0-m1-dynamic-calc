@@ -3,14 +3,9 @@
   "framework": "vite",
   "buildCommand": "pnpm build",
   "outputDirectory": "dist",
+  "installCommand": "pnpm install",
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/[^.]+",
-      "dest": "/index.html"
-    }
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }
