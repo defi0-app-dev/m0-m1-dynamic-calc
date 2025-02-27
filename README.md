@@ -49,9 +49,9 @@ The application is automatically deployed to Vercel through GitHub Actions.
 
 The following secrets need to be configured in your GitHub repository settings:
 
-- `VERCEL_TOKEN`: Your Vercel authentication token
-- `ORG_ID`: Your Vercel organization ID
-- `PROJECT_ID`: Your Vercel project ID
+- `VERCEL_AUTH_TOKEN`: Your Vercel authentication token
+- `VERCEL_ORG_ID`: Your Vercel organization ID
+- `VERCEL_PROJECT_ID`: Your Vercel project ID
 
 To obtain these values:
 1. Get your Vercel token from your account settings
