@@ -27,12 +27,23 @@ interface TooltipProps {
 }
 
 const Calculator: React.FC = () => {
-  const [display, setDisplay] = useState<string>('');
-  const [currentValue, setCurrentValue] = useState<number>(0);
+  const [values, setValues] = useState<CalculatorInputs>({
+    m0: 0,
+  });
+  const [display, setDisplay] = useState('0');
+  const [currentValue, setCurrentValue] = useState(0);
   const [operator, setOperator] = useState<CalculatorOperator | null>(null);
-  const [waitingForSecondOperand, setWaitingForSecondOperand] = useState<boolean>(false);
-
+  const [waitingForSecondOperand, setWaitingForSecondOperand] = useState(false);
+  
   const { tooltipVisible, tooltipContent, position, showTooltip, hideTooltip } = useTooltip();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues(prev => ({
+      ...prev,
+      [name]: Number(value)
+    }));
+  };
 
   const calculateResult = (a: number, b: number, op: CalculatorOperator): number => {
     switch (op) {
@@ -44,7 +55,7 @@ const Calculator: React.FC = () => {
     }
   };
 
-  const handleClick = (input: CalculatorInput) => {
+  const handleClick = (input: CalculatorInput | 'C') => {
     if (typeof input === 'string' && /\d/.test(input)) {
       if (waitingForSecondOperand) {
         setDisplay(input);
@@ -57,7 +68,7 @@ const Calculator: React.FC = () => {
 
     switch (input) {
       case 'C':
-        setDisplay('');
+        setDisplay('0');
         setCurrentValue(0);
         setOperator(null);
         setWaitingForSecondOperand(false);
@@ -100,9 +111,14 @@ const Calculator: React.FC = () => {
         <div className="input-group mb-3">
           <input
             type="number"
-            className="form-control"
+            name="m0"
+            value={values.m0}
+            onChange={handleInputChange}
             placeholder="Enter M0"
-            onMouseEnter={(e: React.MouseEvent) => showTooltip(CALCULATOR_TOOLTIPS.m0, e)}
+            onMouseEnter={(e) => {
+              const element = e.currentTarget;
+              showTooltip(element, CALCULATOR_TOOLTIPS.m0);
+            }}
             onMouseLeave={hideTooltip}
             aria-label="M0 input"
           />
